@@ -1,5 +1,7 @@
 package br.com.digital_house.desafio
 
+import java.util.*
+
 class Curso (var nome : String, var codigo: Int)
 {
     lateinit var professorTitular : ProfessorTitular
@@ -20,4 +22,29 @@ class Curso (var nome : String, var codigo: Int)
     override fun toString(): String {
         return "Curso(nome='$nome', codigo=$codigo)"
     }
+
+    fun adicionarUmAluno(umAluno: Aluno): Boolean{
+        return alunosMatriculados
+            .stream()
+            .anyMatch { a -> a.equals(umAluno) }
+    }
+
+    fun excluirAluno(umAluno: Aluno){
+        alunosMatriculados
+            .stream()
+            .filter {a -> a.equals(umAluno) }
+            .findFirst()
+            .map { i -> { alunosMatriculados.remove(i)
+                System.out.println("Aluno Excluído com sucesso")
+            }}
+            .orElse("Aluno não excluído pois não foi localizado")
+
+    }
+
+    private fun <T> Optional<T>.orElse(s: String) {
+
+    }
 }
+
+
+
