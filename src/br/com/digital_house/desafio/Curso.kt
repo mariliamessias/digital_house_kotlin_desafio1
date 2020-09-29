@@ -36,9 +36,9 @@ class Curso (var nome : String, var codigo: Int)
             .filter {a -> a.equals(umAluno) }
             .findFirst()
             .map { i -> { alunosMatriculados.remove(i)
-                System.out.println("Aluno Excluído com sucesso")
+                println("Aluno Excluído com sucesso")
             }}
-            .orElse("Aluno não excluído pois não foi localizado")
+            .orElse({ println("Aluno não excluído pois não foi localizado") })
 
     }
 
