@@ -26,7 +26,8 @@ class Curso (var nome : String, var codigo: Int)
     fun adicionarUmAluno(umAluno: Aluno): Boolean{
         return alunosMatriculados
             .stream()
-            .anyMatch { a -> a.equals(umAluno) }
+            .anyMatch { a ->  a.equals(umAluno)}
+                && alunosMatriculados.size < quantidadeMaximaAlunos
     }
 
     fun excluirAluno(umAluno: Aluno){
