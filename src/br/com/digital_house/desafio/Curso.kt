@@ -6,7 +6,7 @@ class Curso(var nome: String, var codigo: Int) {
     lateinit var professorTitular: ProfessorTitular
     lateinit var professorAdjunto: ProfessorAdjunto
     var quantidadeMaximaAlunos: Int = 0
-    var alunosMatriculados: MutableList<Aluno> = ArrayList<Aluno>()
+    var alunosMatriculados = mutableListOf<Aluno>()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
