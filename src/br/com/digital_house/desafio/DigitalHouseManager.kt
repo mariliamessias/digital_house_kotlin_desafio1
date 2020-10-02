@@ -2,10 +2,10 @@ package br.com.digital_house.desafio
 
 class DigitalHouseManager() {
 
-    val alunos: MutableList<Aluno> = ArrayList<Aluno>()
-    val matriculas: MutableList<Matricula> = ArrayList<Matricula>()
-    val cursos: MutableList<Curso> = ArrayList<Curso>()
-    val professores: MutableList<Professor> = ArrayList<Professor>()
+    val alunos = mutableListOf<Aluno>()
+    val matriculas = mutableListOf<Matricula>()
+    val cursos = mutableListOf<Curso>()
+    val professores = mutableListOf<Professor>()
 
     fun registrarCurso(nome: String, codigoCurso: Int, quantidadeMaximaDeAlunos: Int) {
 
