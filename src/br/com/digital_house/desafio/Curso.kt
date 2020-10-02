@@ -6,7 +6,7 @@ class Curso(var nome: String, var codigo: Int) {
     lateinit var professorTitular: ProfessorTitular
     lateinit var professorAdjunto: ProfessorAdjunto
     var quantidadeMaximaAlunos: Int = 0
-    lateinit var alunosMatriculados: MutableList<Aluno>
+    var alunosMatriculados: MutableList<Aluno> = ArrayList<Aluno>()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -23,10 +23,10 @@ class Curso(var nome: String, var codigo: Int) {
     }
 
     fun adicionarUmAluno(umAluno: Aluno): Boolean {
-        return alunosMatriculados
+        return alunosMatriculados.size < quantidadeMaximaAlunos &&  ( alunosMatriculados
             .stream()
-            .anyMatch { a -> a.equals(umAluno) }
-                && alunosMatriculados.size < quantidadeMaximaAlunos
+            .noneMatch{ a -> a.equals(umAluno) } || alunosMatriculados.isEmpty())
+
     }
 
     fun excluirAluno(umAluno: Aluno) {
@@ -41,10 +41,6 @@ class Curso(var nome: String, var codigo: Int) {
                 }
             }
             .orElse({ println("Aluno não excluído pois não foi localizado") })
-
-    }
-
-    private fun <T> Optional<T>.orElse(s: String) {
 
     }
 }
