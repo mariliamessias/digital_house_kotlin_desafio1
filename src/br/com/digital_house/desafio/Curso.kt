@@ -2,12 +2,11 @@ package br.com.digital_house.desafio
 
 import java.util.*
 
-class Curso (var nome : String, var codigo: Int)
-{
-    lateinit var professorTitular : ProfessorTitular
+class Curso(var nome: String, var codigo: Int) {
+    lateinit var professorTitular: ProfessorTitular
     lateinit var professorAdjunto: ProfessorAdjunto
-    var quantidadeMaximaAlunos : Int = 0
-    lateinit var alunosMatriculados : MutableList<Aluno>
+    var quantidadeMaximaAlunos: Int = 0
+    lateinit var alunosMatriculados: MutableList<Aluno>
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -23,21 +22,24 @@ class Curso (var nome : String, var codigo: Int)
         return "Curso(nome='$nome', codigo=$codigo)"
     }
 
-    fun adicionarUmAluno(umAluno: Aluno): Boolean{
+    fun adicionarUmAluno(umAluno: Aluno): Boolean {
         return alunosMatriculados
             .stream()
-            .anyMatch { a ->  a.equals(umAluno)}
+            .anyMatch { a -> a.equals(umAluno) }
                 && alunosMatriculados.size < quantidadeMaximaAlunos
     }
 
-    fun excluirAluno(umAluno: Aluno){
+    fun excluirAluno(umAluno: Aluno) {
         alunosMatriculados
             .stream()
-            .filter {a -> a.equals(umAluno) }
+            .filter { a -> a.equals(umAluno) }
             .findFirst()
-            .map { i -> { alunosMatriculados.remove(i)
-                println("Aluno Excluído com sucesso")
-            }}
+            .map { i ->
+                {
+                    alunosMatriculados.remove(i)
+                    println("Aluno Excluído com sucesso")
+                }
+            }
             .orElse({ println("Aluno não excluído pois não foi localizado") })
 
     }
