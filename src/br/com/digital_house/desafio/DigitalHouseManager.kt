@@ -1,15 +1,11 @@
 package br.com.digital_house.desafio
 
-import sun.invoke.empty.Empty
-import java.lang.RuntimeException
-import java.util.*
+class DigitalHouseManager() {
 
-class DigitalHouseManager(
-    val alunos: MutableList<Aluno>,
-    val matriculas: MutableList<Matricula>,
-    val cursos: MutableList<Curso>,
-    val professores: MutableList<Professor>
-) {
+    val alunos: MutableList<Aluno> = ArrayList<Aluno>()
+    val matriculas: MutableList<Matricula> = ArrayList<Matricula>()
+    val cursos: MutableList<Curso> = ArrayList<Curso>()
+    val professores: MutableList<Professor> = ArrayList<Professor>()
 
     fun registrarCurso(nome: String, codigoCurso: Int, quantidadeMaximaDeAlunos: Int) {
 
@@ -58,38 +54,47 @@ class DigitalHouseManager(
 
     fun matricularAluno(nome: String, sobrenome: String, codigoAluno: Int) {
         alunos.add(Aluno(nome, sobrenome, codigoAluno))
+        println("Aluno Matriculado com sucesso: $nome")
     }
 
     fun matricularAluno(codigoAluno: Int, codigoCurso: Int) {
 
-        val cursoPretendido = cursos
-            .stream()
-            .filter { a -> a.codigo == codigoCurso }
-            .findFirst()
-            .get()
+        val alunoExistente = alunos.stream().anyMatch { a -> a.codigo == codigoAluno }
 
-        val alunoPretendido = alunos
-            .stream()
-            .filter { al -> al.codigo == codigoAluno }
-            .findFirst()
-            .get()
+        if (alunoExistente) {
+            val cursoPretendido = cursos
+                .stream()
+                .filter { a -> a.codigo == codigoCurso }
+                .findFirst()
+                .get()
 
-        (if (cursoPretendido != null && alunoPretendido != null) {
+            val alunoPretendido = alunos
+                .stream()
+                .filter { al -> al.codigo == codigoAluno }
+                .findFirst()
+                .get()
 
             val matriculaPermitida =
                 cursoPretendido.alunosMatriculados.stream()
                     .noneMatch { al -> al.codigo == codigoAluno }
 
-            if (matriculaPermitida) {
+            val matriculasAtuais = matriculas.stream()
+                .filter { m -> m.aluno.codigo == codigoAluno }
+                .filter { m -> m.curso.codigo == codigoCurso }
+                .findFirst()
+                .isPresent
+
+            if (matriculaPermitida && !matriculasAtuais && cursoPretendido.adicionarUmAluno(alunoPretendido)) {
                 matriculas.add(Matricula(alunoPretendido, cursoPretendido))
-                println("Matricula Realizada com sucesso")
+                cursoPretendido.alunosMatriculados.add(alunoPretendido)
+                println("Matricula Realizada com sucesso no curso: ${cursoPretendido.nome} para o aluno: ${alunoPretendido.nome}")
             } else {
-                println("Não há vagas disponíveis")
+                println("Não há vagas disponíveis para o curso ${cursoPretendido.nome} para o aluno ${alunoPretendido.nome}")
             }
 
         } else {
-            println("aluno ou curso não localizado")
-        })
+            println("aluno não localizado")
+        }
 
     }
 
@@ -109,32 +114,18 @@ class DigitalHouseManager(
 
         if (professorTitular != null && professorAdjunto != null) {
 
-            val cursoAdjunto: Curso = cursos.stream()
-                .filter { c -> c.professorAdjunto.codigo == professorAdjunto.codigo }
-                .filter { p -> p.codigo == codigoCurso }
+            val cursoMatricular = cursos.stream().filter { c -> c.codigo == codigoCurso }
                 .findFirst()
                 .get()
 
-            val cursoTitular: Curso = cursos.stream()
-                .filter { c -> c.professorTitular.codigo == professorTitular.codigo }
-                .filter { p -> p.codigo == codigoCurso }
-                .findFirst()
-                .get()
-
-            if (cursoAdjunto == null && cursoTitular == null) {
-                val cursoMatricular = cursos.stream().filter { c -> c.codigo == codigoCurso }
-                    .findFirst()
-                    .get()
-
-                if (cursoMatricular != null) {
-                    cursoMatricular.professorTitular = professorTitular as ProfessorTitular
-                    cursoMatricular.professorAdjunto = professorTitular as ProfessorAdjunto
-
-                }
+            if (cursoMatricular != null) {
+                cursoMatricular.professorTitular = professorTitular as ProfessorTitular
+                cursoMatricular.professorAdjunto = professorAdjunto as ProfessorAdjunto
+                println("Professor Matriculado com Sucesso:" +
+                        "\n ProfessorTitular: ${professorTitular.nome} " +
+                        "\n ProfessorAdjunto: ${professorAdjunto.nome} \nCurso: ${cursoMatricular.nome}")
 
             }
         }
-
-
     }
 }
